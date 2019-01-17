@@ -1,2 +1,2 @@
 # movie-api
-Flask Omdb JSON project
+Flask project that uses OMDb API to request JSON data for movie search strings.
