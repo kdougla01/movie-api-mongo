@@ -16,16 +16,20 @@
 			<th>Poster</th>
 			<th>Title</th>
 			<th>Year</th>
-			<th>Link</th>
+			<th>Remove</th>
 		</tr>
 		</thead>
 		<tbody>
-		{% for item in items %}
+		{% for item in favMovies %}
 			<tr>
-				<td><img src="{{ item.Poster }}" width=100px; height=150px;></img></td>
-				<td><h1> {{ item.Title }} </h1></td>
-				<td><h2> {{ item.Year }}</h2></td>
-				<td><a class="button is-link" href="info/{{ item.imdbID }}">More info</a></td>
+				<td><img src="{{ item.poster }}" width=100px; height=150px;></img></td>
+				<td><h1> {{ item.title }} </h1></td>
+				<td><h2> {{ item.rated }}</h2></td>
+				<td>
+					<form method="POST" action="/delete/{{item._id}}">
+						<button class="button is-danger">Remove</button>
+					</form>
+				</td>
 			</tr>
 		{% endfor %}
 		</tbody>
