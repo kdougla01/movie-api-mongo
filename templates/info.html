@@ -45,6 +45,16 @@
 		{% endfor %}
 	</table>
     </div>
+    <div class="container">
+    	<form method="POST" action="/info/{{id}}">
+			<button class="button is-primary">Add</button>
+		</form>
+	</div>
+	<div class="container">
+    	<form method="POST" action="/delete/{{id}}">
+			<button class="button is-danger">Remove</button>
+		</form>
+	</div>
   </section>
   </body>
 </html>

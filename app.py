@@ -1,7 +1,14 @@
 from flask import Flask, render_template, request
+from flask_pymongo import PyMongo
+from bson.objectid import ObjectId
 import requests
 
+
 app = Flask(__name__)
+app.secret_key = "secret key"
+app.config["MONGO_URI"] = "mongodb://localhost:27017/movies"
+mongo = PyMongo(app)
+
 
 @app.route('/movie', methods=['POST'])
 def movie():
@@ -30,9 +37,6 @@ def info(id):
     r = requests.get('http://www.omdbapi.com/?apikey='+apikey+'&i='+imdb_search)
     json_object = r.json()
 
-    #items = json_object['ID']
-
-    #for item in json_object:
     poster = json_object['Poster']
     title = json_object['Title']
     rated = json_object['Rated']
@@ -47,8 +51,25 @@ def info(id):
         source = rating['Source']
         value = rating['Value']
 
+    if request.method == 'POST':
+        fav = mongo.db.userMovies.insert({'_id': id, 'title': title, 'rated': rated, 'poster': poster})
+        resp = 'Added to Favourites'
+        return resp
+
     #return json_object
-    return render_template('info.html', ratings=ratings, poster=poster, title=title, rated=rated, director=director, runtime=runtime, plot=plot, released=released)
+    return render_template('info.html', id=id, ratings=ratings, poster=poster, title=title, rated=rated, director=director, runtime=runtime, plot=plot, released=released)
+
+
+@app.route('/delete/<id>', methods=['POST'])
+def delete_movie(id):
+    mongo.db.userMovies.delete_one({'_id': id})
+    resp = 'Movie removed successfully!'
+    return resp
+
+@app.route('/userFavs')
+def userFavs():
+    favMovies = mongo.db.userMovies.find()
+    return render_template('userMovies.html', favMovies=favMovies)
 
 @app.route('/')
 def index():
